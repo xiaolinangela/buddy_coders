@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+{% block title %}
+Login Here
+{% endblock %}
+
+{% block content %}
+<form method = "post" class="form-group">
+    {% csrf_token %}
+    {{ form }}
+    <button class="btn waves-effect waves-light" type="submit" name="action">Log In
+    <i class="material-icons right">send</i>
+  </button>
+    <p>Don't an account? Create one <a href="/register/">Here</a></p>
+</form>
+{% endblock %}
