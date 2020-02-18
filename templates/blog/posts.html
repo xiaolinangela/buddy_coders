@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div>
+<h5><a href="{%url 'create_post' %}">Create New Post</a></h5>
+</div>
+{% if latest_blog_list %}
+    <ul>
+        {% for blog in latest_blog_list %}
+        <li><a href = "/blog/{{ blog.id }}/">{{ blog.content }}</a></li>
+        {% endfor %}
+    </ul>
+{% else %}
+<p>No blogs are available</p>
+{% endif %}
+{% endblock %}

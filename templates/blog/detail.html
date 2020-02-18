@@ -1,0 +1,7 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{{ post.content }}
+<a href="{%url 'delete_post' post.id %}">delete</a>
+
+{% endblock %}
