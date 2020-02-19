@@ -16,9 +16,13 @@
     <div class="container nav-wrapper" >
         <a href="/" class="brand-logo">Buddy Coders</a>
         <ul id="nav-mobile" class="right">
-            <li><a href="/">Home</a></li>
-            <li><a href="/">Log In</a></li>
-            <li><a href="/">Sign Up</a></li>
+            {% if user.is_authenticated %}
+            <li>{{ user.get_username }}</li>
+            <li><a href="{% url 'logout'%}">Log Out</a></li>
+            {% else %}
+            <li><a href="{% url 'login'%}">Log In</a></li>
+            {% endif %}
+            <li><a href="{% url 'register'%}">Sign Up</a></li>
         </ul>
     </div>
     </nav>
