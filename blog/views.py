@@ -1,10 +1,11 @@
 from django.shortcuts import render, redirect
 from django.views import generic
-from .models import Post
+from .models import Post, Comment
 from django.views.generic.edit import CreateView
 from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
+from .forms import NewCommentForm
 
 
 # Create your views here.
@@ -37,6 +38,20 @@ class PostCreateView(LoginRequiredMixin,CreateView):
 class PostDetailView(LoginRequiredMixin,generic.DetailView):
     model = Post
     template_name = 'blog/detail.html'
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        comments_connected = Comment.objects.filter(post_connected=self.get_object())
+        data['comments'] = comments_connected
+        data['form'] = NewCommentForm(instance=self.request.user)
+        return data
+
+    def post(self, request,*args, **kwargs):
+        new_comment = Comment(content=request.POST.get('content'),
+                              user=self.request.user,
+                              post_connected=self.get_object())
+        new_comment.save()
+        return self.get(self, request, *args, **kwargs)
 
 class PostDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = Post
