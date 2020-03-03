@@ -2,10 +2,12 @@
 
 {% block content %}
 <h5 style = "color:orange">{{user.username}}'s Profile </h5>
+
+<p>All the Posts:</p>
 {% if user_blog_lists %}
     <ul>
         {% for blog in user_blog_lists %}
-        <li>{{ blog.content }}</li>
+        <li><a href="{% url 'user_post_detail' user.username blog.id %}">{{ blog.content }}</a></li>
         {% endfor %}
     </ul>
 {% else %}

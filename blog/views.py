@@ -83,7 +83,6 @@ class UserPostListView(LoginRequiredMixin, generic.ListView):
     model = Post
     template_name = 'blog/user_detail.html'
     context_object_name = 'user_blog_lists'
-
     def visit_user(self):
         visit_user = get_object_or_404(User, username=self.kwargs.get('username'))
         return visit_user
@@ -93,3 +92,25 @@ class UserPostListView(LoginRequiredMixin, generic.ListView):
         data = super().get_context_data(**kwargs)
         data['user'] = self.visit_user()
         return data
+
+class UserPostDetailView(LoginRequiredMixin, generic.DetailView):
+    model = Post
+    template_name = 'blog/user_post_detail.html'
+    def visit_user(self):
+        visit_user = get_object_or_404(User, username=self.kwargs.get('username'))
+        return visit_user
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        comments_connected = Comment.objects.filter(post_connected=self.get_object())
+        data['comments'] = comments_connected
+        data['form'] = NewCommentForm(instance=self.visit_user())
+        return data
+
+    def post(self, request,*args, **kwargs):
+        new_comment = Comment(content=request.POST.get('content'),
+                              user=self.request.user,
+                              post_connected=self.get_object())
+        new_comment.save()
+        return self.get(self, request, *args, **kwargs)
+#
+
