@@ -13,4 +13,12 @@
 {% else %}
 <p>No blogs are available</p>
 {% endif %}
+
+<p> Top users : </p>
+{% for user in users %}
+<ul>
+   <li><a href="{% url 'user_posts' user.username %}"> {{ user.username }} </a></li>
+</ul>
+{% endfor %}
+
 {% endblock %}

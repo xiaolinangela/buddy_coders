@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<h5 style = "color:orange">{{user.username}}'s Profile </h5>
+{% if user_blog_lists %}
+    <ul>
+        {% for blog in user_blog_lists %}
+        <li>{{ blog.content }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+<p>No blogs are available</p>
+{% endif %}
+
+{% endblock %}

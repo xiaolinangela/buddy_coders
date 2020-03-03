@@ -1,4 +1,4 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.views import generic
 from .models import Post, Comment
 from django.views.generic.edit import CreateView
@@ -6,6 +6,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.models import User
 from django.contrib.auth.mixins import LoginRequiredMixin
 from .forms import NewCommentForm
+from users.models import Follow, Profile
 
 
 # Create your views here.
@@ -20,8 +21,15 @@ class PostView(LoginRequiredMixin, generic.ListView):
     template_name = 'blog/posts.html'
     queryset = Post.objects.all()
     context_object_name = 'latest_blog_list'
+
     def get_queryset(self):
         return Post.objects.filter(user=self.request.user)
+
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        users = User.objects.exclude(username = self.request.user.username)
+        data["users"] = users
+        return data
 
 class PostCreateView(LoginRequiredMixin,CreateView):
     model = Post
@@ -58,3 +66,30 @@ class PostDeleteView(LoginRequiredMixin, generic.DeleteView):
     template_name = 'blog/delete_post.html'
     success_url = '/'
 
+# class UserPostListView(LoginRequiredMixin, generic.DetailView):
+#     model = Post
+#     template_name = 'blog/user_detail.html'
+#     def get_object(self):
+#         visit_user = get_object_or_404(User, username=self.kwargs.get('username'))
+#         return visit_user
+#     def get_context_data(self, **kwargs):
+#         data = super().get_context_data(**kwargs)
+#         user = self.get_object()
+#         data["user_blog_lists"] = Post.objects.filter(user=user)
+#         return data
+
+
+class UserPostListView(LoginRequiredMixin, generic.ListView):
+    model = Post
+    template_name = 'blog/user_detail.html'
+    context_object_name = 'user_blog_lists'
+
+    def visit_user(self):
+        visit_user = get_object_or_404(User, username=self.kwargs.get('username'))
+        return visit_user
+    def get_queryset(self):
+        return Post.objects.filter(user=self.visit_user())
+    def get_context_data(self, **kwargs):
+        data = super().get_context_data(**kwargs)
+        data['user'] = self.visit_user()
+        return data
