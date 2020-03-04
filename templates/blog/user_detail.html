@@ -3,6 +3,16 @@
 {% block content %}
 <h5 style = "color:orange">{{user.username}}'s Profile </h5>
 
+<form method= "post" > {% csrf_token %}
+    {% if already_followed == False%}
+      <button class="btn waves-effect waves-light" type="submit" name="action" value="follow">Follow
+  </button>
+    {% else %}
+     <button class="btn waves-effect waves-light" type="submit" name="action" value="unfollow">Unfollow
+  </button>
+    {% endif %}
+</form>
+
 <p>All the Posts:</p>
 {% if user_blog_lists %}
     <ul>

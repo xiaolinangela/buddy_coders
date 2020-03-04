@@ -1,9 +1,15 @@
 {% extends 'base.html' %}
 
 {% block content %}
+<h5>{{ current_user }}'s Homepage</h5>
+
 <div>
 <h5><a href="{%url 'create_post' %}">Create New Post</a></h5>
 </div>
+
+<p>Following: <a href ="{% url 'user_following' user.username %}"> {{ follow }} </a></p>
+<p>Followers: <a href ="{% url 'user_follower' user.username %}">{{ follower }} </a></p>
+
 {% if latest_blog_list %}
     <ul>
         {% for blog in latest_blog_list %}

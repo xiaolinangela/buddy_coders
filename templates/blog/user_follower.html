@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+{% if follower_list %}
+    <ul>
+        {% for follower in follower_list %}
+        <li>{{ follower }}</li>
+        {% endfor %}
+    </ul>
+{% else %}
+<p>Not following anyone</p>
+{% endif %}
+{% endblock %}
